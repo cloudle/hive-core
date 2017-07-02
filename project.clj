@@ -3,10 +3,15 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
+  :repositories {"my.datomic.com" {:url "https://my.datomic.com/repo"
+                                   :username [:env/DATOMIC_USERNAME]
+                                   :password [:env/DATOMIC_PASSWORD]}}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [cheshire "5.7.1"]
                  [proto-repl "0.3.1"]
                  [io.pedestal/pedestal.service "0.5.2"]
+                 [com.datomic/datomic-pro "0.9.5561.50"]
+                 [expectations "2.2.0-beta1"]
 
                  ;; Remove this line and uncomment one of the next lines to
                  ;; use Immutant or Tomcat instead of Jetty:

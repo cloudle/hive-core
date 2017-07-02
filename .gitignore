@@ -1,5 +1,6 @@
 # Project related
 .idea
+.lein
 
 # Java related
 pom.xml
@@ -36,4 +37,3 @@ repl-port
 # Builds
 out/
 build/
-
