@@ -8,7 +8,7 @@
                                    :password [:env/DATOMIC_PASSWORD]}}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [cheshire "5.7.1"]
-                 [proto-repl "0.3.1"]
+                 [com.amazonaws/aws-java-sdk-dynamodb "1.11.158"]
                  [io.pedestal/pedestal.service "0.5.2"]
                  [com.datomic/datomic-pro "0.9.5561.50"]
                  [expectations "2.2.0-beta1"]
@@ -29,7 +29,10 @@
   :resource-paths ["config", "resources"]
   ;; If you use HTTP/2 or ALPN, use the java-agent to pull in the correct alpn-boot dependency
   ;:java-agents [[org.mortbay.jetty.alpn/jetty-alpn-agent "2.0.5"]]
+  :datomic {:schemas ["resources" ["schema.edn"]]}
   :profiles {:dev {:aliases {"run-dev" ["trampoline" "run" "-m" "hive.server/run-dev"]}
-                   :dependencies [[io.pedestal/pedestal.service-tools "0.5.2"]]}
+                   :dependencies [[io.pedestal/pedestal.service-tools "0.5.2"]]
+                   :datomic {:config "resources/dynamo-transactor.properties"
+                             :db-uri "datomic:ddb://ap-northeast-1/hive-core/hive-core"}}
              :uberjar {:aot [hive.server]}}
   :main ^{:skip-aot true} hive.server)

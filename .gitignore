@@ -1,6 +1,7 @@
 # Project related
 .idea
 .lein
+resources/*.properties
 
 # Java related
 pom.xml
