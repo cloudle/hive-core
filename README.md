@@ -11,6 +11,9 @@ FIXME
 4. Run your app's tests with `lein test`. Read the tests at test/hive/service_test.clj.
 5. Learn more! See the [Links section below](#links).
 
+## Scripts
+- lein datomic start
+- lein datomic initialize
 
 ## REPL
 1. open Proto-REPL on Atom
