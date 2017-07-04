@@ -1,21 +1,20 @@
 (ns hive.service
-  (:require [io.pedestal.http :as http]
+  (:require [io.pedestal.log :refer :all]
+            [io.pedestal.http :as http]
             [io.pedestal.http.route :as route]
             [io.pedestal.http.body-params :as body-params]
-            [io.pedestal.http.content-negotiation :as conneg]
             [ring.util.response :as ring-resp]
+            [io.pedestal.interceptor :refer [interceptor]]
             [cheshire.core :refer :all]
-            [com.walmartlabs.lacinia :refer [execute]]
+            [com.walmartlabs.lacinia :refer [execute execute-parsed-query]]
             [com.walmartlabs.lacinia.schema :as schema]
-            [clojure.tools.logging :as log]))
+            [hive.utils.interceptor :as interceptors]))
 
 (def hive-schema
   (schema/compile
    {:queries
      {:greeting {:type 'String
-                 :resolve (constantly "world")}}}))
-
-(generate-string {:userName "Cloud!"})
+                 :resolve (constantly "world!")}}}))
 
 (defn home-page [request]
   (let [query (get-in request [:params :query])]
@@ -27,55 +26,60 @@
                               (clojure-version)
                               (route/url-for ::about-page))))
 
+(defn ^:private apply-result-to-context
+  [context result]
+  ;; When :data is missing, then a failure occurred during parsing or preparing
+  ;; the request, which indicates a bad request, rather than some failure
+  ;; during execution.
+  (let [status (if (contains? result :data) 200 400)
+        response {:status status :headers {} :body result}]
+    (assoc context :response response)))
+
+;(defn api-page
+;  [request]
+;  (ring-resp/response (execute hive-schema "query { greeting }" nil nil)))
+
 (defn api-page
   [request]
-  (ring-resp/response (execute hive-schema "query { greeting }" nil nil)))
+  (let [{query :parsed-query
+         vars :graphql-vars
+         context :graphql-context} request]
+    (ring-resp/response (execute-parsed-query query vars context))))
 
-(def supported-types ["text/html" "application/edn" "application/json" "text/plain"])
+(def hive-query-parser-interceptor (interceptors/graphql-query-parser hive-schema))
+(def inject-hive-context-interceptor (interceptors/inject-graphql-context {:user-id "fake"}))
 
-(def content-neg-intc (conneg/negotiate-content supported-types))
+(def common-interceptors
+  [(body-params/body-params)
+   interceptors/coerce-response-body
+   interceptors/content-negotiation])
 
-(def coerce-body
-  {:name ::coerce-body
-   :leave
-   (fn [context]
-     (let [accepted         (get-in context [:request :accept :field] "text/plain")
-           response         (get context :response)
-           body             (get response :body)
-           coerced-body     (case accepted
-                              "text/html"        body
-                              "text/plain"       body
-                              "application/edn"  (pr-str body)
-                              "application/json" (generate-string body))
-           updated-response (assoc response
-                                   :headers {"Content-Type" accepted}
-                                   :body    coerced-body)]
-       (assoc context :response updated-response)))})
+(def graphql-get-interceptors
+  [interceptors/coerce-response-body
+   interceptors/content-negotiation
+   interceptors/graphql-query-data
+   interceptors/graphql-missing-query-guard
+   hive-query-parser-interceptor
+   interceptors/graphql-status-conversion
+   inject-hive-context-interceptor])
 
-;; Defines "/" and "/about" routes with their associated :get handlers.
-;; The interceptors defined after the verb map (e.g., {:get home-page}
-;; apply to / and its children (/about).
-(def common-interceptors [coerce-body content-neg-intc (body-params/body-params)])
+(def graphql-post-interceptors
+  [interceptors/coerce-response-body
+   interceptors/content-negotiation
+   interceptors/body-data
+   interceptors/graphql-query-data
+   interceptors/graphql-missing-query-guard
+   hive-query-parser-interceptor
+   interceptors/graphql-status-conversion
+   inject-hive-context-interceptor])
 
 ;; Tabular routes
-(def routes #{["/" :get (conj common-interceptors `home-page)]
-              ["/about" :get (conj common-interceptors `about-page)]
-              ["/api" :get (conj common-interceptors `api-page)]})
+(def routes
+  #{["/" :get (conj common-interceptors `home-page)]
+    ["/about" :get (conj common-interceptors `about-page)]
+    ["/api" :get (conj graphql-get-interceptors `api-page) :route-name :api-get]
+    ["/api" :post (conj graphql-post-interceptors `api-page) :route-name :api-post]})
 
-;; Map-based routes
-;(def routes `{"/" {:interceptors [(body-params/body-params) http/html-body]
-;                   :get home-page
-;                   "/about" {:get about-page}}})
-
-;; Terse/Vector-based routes
-;(def routes
-;  `[[["/" {:get home-page}
-;      ^:interceptors [(body-params/body-params) http/html-body]
-;      ["/about" {:get about-page}]]]])
-
-
-;; Consumed by hive.server/create-server
-;; See http/default-interceptors for additional options you can configure
 (def service {:env :prod
               ;; You can bring your own non-default interceptors. Make
               ;; sure you include routing and set it up right for

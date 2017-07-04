@@ -16,6 +16,7 @@
                  ;; Remove this line and uncomment one of the next lines to
                  ;; use Immutant or Tomcat instead of Jetty:
                  [io.pedestal/pedestal.jetty "0.5.2"]
+                 [io.pedestal/pedestal.log "0.5.1"]
                  ;; [io.pedestal/pedestal.immutant "0.5.2"]
                  ;; [io.pedestal/pedestal.tomcat "0.5.2"]
                  [com.walmartlabs/lacinia "0.18.0"]

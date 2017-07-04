@@ -15,12 +15,14 @@
       (d/transact conn schema)
       conn)))
 
+;; Adding single pet-owner and be able to find them
 (expect #{["John"]}
         (with-redefs [conn (create-empty-in-memory-db)]
           (do
             (add-pet-owner "John")
             (find-all-pet-owners))))
 
+;; Adding multiple pet-owner should work, we could find them all
 (expect #{["John"] ["Paul"] ["George"]}
         (with-redefs [conn (create-empty-in-memory-db)]
           (do
