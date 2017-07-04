@@ -3,7 +3,7 @@
             [expectations :refer :all]
             [flatland.ordered.map :refer [ordered-map]]
             [com.walmartlabs.lacinia :refer [execute]]
-            [hive.service :as service]))
+            [hive.graphql.schema :refer [hive-schema]]))
 
 (expect {:data (ordered-map :greeting "world!")}
-        (execute service/hive-schema "query { greeting }" nil nil))
+        (execute hive-schema "query { greeting }" nil nil))

@@ -5,16 +5,10 @@
             [io.pedestal.http.body-params :as body-params]
             [ring.util.response :as ring-resp]
             [io.pedestal.interceptor :refer [interceptor]]
-            [cheshire.core :refer :all]
+            [cheshire.core :refer [generate-string]]
             [com.walmartlabs.lacinia :refer [execute execute-parsed-query]]
-            [com.walmartlabs.lacinia.schema :as schema]
-            [hive.utils.interceptor :as interceptors]))
-
-(def hive-schema
-  (schema/compile
-   {:queries
-     {:greeting {:type 'String
-                 :resolve (constantly "world!")}}}))
+            [hive.utils.interceptor :as interceptors]
+            [hive.graphql.schema :refer [hive-schema]]))
 
 (defn home-page [request]
   (let [query (get-in request [:params :query])]

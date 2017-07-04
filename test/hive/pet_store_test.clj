@@ -1,10 +1,8 @@
-(ns hive.datomic-test
-  (:require [io.pedestal.test :refer :all]
-            [io.pedestal.http :as bootstrap]
-            [expectations :refer :all]
+(ns hive.pet-store-test
+  (:require [expectations :refer :all]
             [datomic.api :as d]
-            [hive.service :as service]
-            [hive.core :refer :all]))
+            [hive.core :refer [conn]]
+            [hive.store.pet :refer :all]))
 
 (defn create-empty-in-memory-db []
   (let [uri "datomic:mem://hive-core-test"]
