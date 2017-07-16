@@ -8,6 +8,7 @@
                                    :password [:env/DATOMIC_PASSWORD]}}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [cheshire "5.7.1"]
+                 [buddy/buddy-hashers "1.2.0"]
                  [com.amazonaws/aws-java-sdk-dynamodb "1.11.158"]
                  [io.pedestal/pedestal.service "0.5.2"]
                  [com.datomic/datomic-pro "0.9.5561.50"]

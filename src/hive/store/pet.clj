@@ -30,7 +30,8 @@
 (defn find-pets-for-owner [owner-name]
   (d/q '[:find ?pet-name
          :in $ ?owner-name
-         :where [?eid :owner/name ?owner-name]
+         :where
+         [?eid :owner/name ?owner-name]
          [?eid :owner/pets ?pet]
          [?pet :pet/name ?pet-name]]
        (d/db conn)

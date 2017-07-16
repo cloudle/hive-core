@@ -1,7 +1,3 @@
-# hive
-
-FIXME
-
 ## Getting Started
 
 1. Start the application: `lein run`
@@ -52,3 +48,13 @@ Once the image it built, it's cached.  To delete the image and build a new one:
 
 ## Links
 * [Other examples](https://github.com/pedestal/samples)
+
+## Datalog questions:
+- Find movie title by year
+- Given a list of movie titles, find the title and the year that movie was released. 
+["Lethal Weapon" "Lethal Weapon 2" "Lethal Weapon 3"] 
+- Find all movie ?titles where the ?actor and the ?director has worked together
+- Write a query that, given an actor name and a relation with movie-title/rating, finds the movie titles and corresponding rating for which that actor was a cast member.
+- What attributes are associated with a given movie.
+- Find the names of all people associated with a particular movie (i.e. both the actors and the directors)
+ 

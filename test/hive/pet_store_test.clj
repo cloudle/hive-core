@@ -1,17 +1,8 @@
 (ns hive.pet-store-test
   (:require [expectations :refer :all]
             [datomic.api :as d]
-            [hive.core :refer [conn]]
+            [hive.core :refer :all]
             [hive.store.pet :refer :all]))
-
-(defn create-empty-in-memory-db []
-  (let [uri "datomic:mem://hive-core-test"]
-    (d/delete-database uri)
-    (d/create-database uri)
-    (let [conn (d/connect uri)
-          schema (load-file "resources/schema.edn")]
-      (d/transact conn schema)
-      conn)))
 
 ;; Adding single pet-owner and be able to find them
 (expect #{["John"]}
