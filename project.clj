@@ -20,7 +20,7 @@
                  [io.pedestal/pedestal.log "0.5.1"]
                  ;; [io.pedestal/pedestal.immutant "0.5.2"]
                  ;; [io.pedestal/pedestal.tomcat "0.5.2"]
-                 [com.walmartlabs/lacinia "0.19.0"]
+                 [com.walmartlabs/lacinia "0.18.0"]
 
                  [ch.qos.logback/logback-classic "1.1.8" :exclusions [org.slf4j/slf4j-api]]
                  [org.slf4j/jul-to-slf4j "1.7.22"]

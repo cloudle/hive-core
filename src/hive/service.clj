@@ -27,18 +27,18 @@
   ;; during execution.
   (let [status (if (contains? result :data) 200 400)
         response {:status status :headers {} :body result}]
-    (assoc context :response response))
+    (assoc context :response response)))
 
-  ;(defn api-page
-  ;  [request]
-  ;  (ring-resp/response (execute hive-schema "query { greeting }" nil nil)))
+;(defn api-page
+;  [request]
+;  (ring-resp/response (execute hive-schema "query { greeting }" nil nil)))
 
-  (defn api-page
-    [request]
-    (let [{query   :parsed-query
-           vars    :graphql-vars
-           context :graphql-context} request]
-      (ring-resp/response (execute-parsed-query query vars context)))))
+(defn api-page
+  [request]
+  (let [{query   :parsed-query
+         vars    :graphql-vars
+         context :graphql-context} request]
+    (ring-resp/response (execute-parsed-query query vars context))))
 
 (def hive-query-parser-interceptor (interceptors/graphql-query-parser hive-schema))
 (def inject-hive-context-interceptor (interceptors/inject-graphql-context {:user-id "fake"}))
