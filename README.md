@@ -41,7 +41,7 @@ To learn more about configuring Logback, read its [documentation](http://logback
 
 1. Build and run your image: `capstan run -f "8080:8080"`
 
-Once the image it built, it's cached.  To delete the image and build a new one:
+Once the image it built, it's cached. To delete the image and build a new one:
 
 1. `capstan rmi hive; capstan build`
 

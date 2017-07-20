@@ -39,6 +39,8 @@
    field-type
    ])
 
+@(d/transact conn schema)
+
 (defn create-empty-in-memory-db []
   (let [uri "datomic:mem://hive-core-test"]
     (d/delete-database uri)

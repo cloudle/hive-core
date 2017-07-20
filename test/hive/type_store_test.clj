@@ -7,8 +7,8 @@
             [hive.store.type :refer :all]))
 
 ;; Adding single pet-owner and be able to find them
-(expect #{["Article"]}
-        (with-redefs [conn (create-empty-in-memory-db)]
-          (do (add-account "cloudle" "12345" "Cloud Le" "lehaoson@gmail.com")
-              (add-project-using-account "My project" "cloudle")
-               )))
+;(expect #{["Article"]}
+;        (with-redefs [conn (create-empty-in-memory-db)]
+;          (do (add-account "cloudle" "12345" "Cloud Le" "lehaoson@gmail.com")
+;              (add-project-using-account "My project" "cloudle")
+;               )))
