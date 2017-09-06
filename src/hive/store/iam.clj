@@ -31,6 +31,13 @@
        (d/db conn)
        account))
 
+(defn find-account-by-email [email]
+  (d/q '[:find [(pull ?a [*])]
+         :in $ ?account
+         :where [?a :user/email ?email]]
+       (d/db conn)
+       email))
+
 (defn iam-login [account password]
   (d/q '[:find [(pull ?a [*])]
          :in $ ?account ?password

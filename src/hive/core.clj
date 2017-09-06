@@ -5,12 +5,15 @@
              [hive.schema.project :refer :all]
              [hive.schema.type :refer :all]
              [hive.schema.field :refer :all]
-             [hive.schema.enum :as enum]))
+             [hive.schema.enum :as enum]
+             [hive.utils.firebase.app :refer [init-once!]]))
 
 ;; Database connection ----------------------------
 ; (def uri "datomic:ddb://ap-northeast-1/hive-core/hive-core")
 (def uri "datomic:dev://localhost:4334/hive-core")
 (def conn (d/connect uri))
+
+(def firebase-core (init-once! "resources/hive-core-secret.json" "https://dxg-crm.firebaseio.com"))
 
 (defn make-idents [x] (mapv #(hash-map :db/ident %) x))
 

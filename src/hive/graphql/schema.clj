@@ -1,7 +1,6 @@
 (ns hive.graphql.schema
   (:require [com.walmartlabs.lacinia.schema :as schema]
             [hive.graphql.primitives :refer :all]
-            [hive.graphql.object.user :as user-type]
             [hive.store.iam :as iam]))
 
 (def user-type
@@ -12,8 +11,8 @@
             :account datomic-string}})
 
 (defn resolve-account [context args v]
-  (let [account (:account args)]
-    (-> (iam/find-account account) first)))
+  (let [user-email (get-in context [:user :email])]
+    (-> (iam/find-account-by-email user-email) first)))
 
 (def hive-schema
   (schema/compile
@@ -24,7 +23,7 @@
                  :values [:ADMIN :USER]}}
      :queries
      {:account {:type :user
-                :args {:account {:type 'String}}
+                :args {:account {:type 'String :default-value "cloudle"}}
                 :resolve resolve-account}
       :greeting {:type 'String
                  :args {:userType {:type :userType}}

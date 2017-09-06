@@ -8,6 +8,8 @@
             [cheshire.core :refer [generate-string]]
             [com.walmartlabs.lacinia :refer [execute execute-parsed-query]]
             [hive.utils.interceptor :as interceptors]
+            [hive.utils.firebase.users :as users]
+            [hive.core :refer [firebase-core]]
             [hive.graphql.schema :refer [hive-schema]]))
 
 (defn home-page [request]
@@ -37,7 +39,10 @@
   [request]
   (let [{query   :parsed-query
          vars    :graphql-vars
-         context :graphql-context} request]
+         graphql-context :graphql-context} request
+        token (:token graphql-context)
+        user @(users/verify-token firebase-core token)
+        context (assoc graphql-context :user user)]
     (ring-resp/response (execute-parsed-query query vars context))))
 
 (def hive-query-parser-interceptor (interceptors/graphql-query-parser hive-schema))
@@ -55,7 +60,7 @@
    interceptors/graphql-missing-query-guard
    hive-query-parser-interceptor
    interceptors/graphql-status-conversion
-   inject-hive-context-interceptor])
+   interceptors/inject-graphql-context])
 
 (def graphql-post-interceptors
   [interceptors/coerce-response-body
@@ -65,7 +70,7 @@
    interceptors/graphql-missing-query-guard
    hive-query-parser-interceptor
    interceptors/graphql-status-conversion
-   inject-hive-context-interceptor])
+   interceptors/inject-graphql-context])
 
 ;; Tabular routes
 (def routes

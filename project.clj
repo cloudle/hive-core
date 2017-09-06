@@ -9,8 +9,10 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [cheshire "5.7.1"]
                  [buddy/buddy-hashers "1.2.0"]
+                 [buddy/buddy-sign "1.5.0"]
                  [com.amazonaws/aws-java-sdk-dynamodb "1.11.158"]
                  [io.pedestal/pedestal.service "0.5.2"]
+                 [com.google.firebase/firebase-admin "5.3.0"]
                  [com.datomic/datomic-pro "0.9.5561.50"]
                  [expectations "2.2.0-beta1"]
 

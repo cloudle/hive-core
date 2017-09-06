@@ -2,6 +2,7 @@
 .idea
 .lein
 resources/*.properties
+resources/hive-core-secret.json
 
 # Java related
 pom.xml

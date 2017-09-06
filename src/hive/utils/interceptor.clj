@@ -142,12 +142,11 @@
                                 (map #(dissoc % :status) errors))))
                 context)))})
 
-(defn inject-graphql-context
+(def inject-graphql-context
   "Adds a :graphql-context key to the request, used when executing the query.
   The provided graphql-context map is augmented with the request map, as key :request."
-  {:added "0.2.0"}
-  [app-context]
   {:name ::inject-app-context
    :enter (fn [context]
-            (assoc-in context [:request :graphql-context]
-                      (assoc app-context :request (:request context))))})
+            (let [token (get-in context [:request :headers "token"])]
+              (assoc-in context [:request :graphql-context]
+                        (assoc {:token token} :request (:request context)))))})
