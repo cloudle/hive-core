@@ -11,6 +11,12 @@
           (do (add-account "cloudle" "12345" "Cloud Le" "lehaoson@gmail.com")
               (-> (find-account "cloudle") first :user/name))))
 
+;; Add account and find it by email
+(expect "Cloud Le"
+        (with-redefs [conn (create-empty-in-memory-db)]
+          (do (add-account "cloudle" "12345" "Cloud Le" "lehaoson@gmail.com")
+              (-> (find-account-by-email "lehaoson@gmail.com") first :user/name))))
+
 ;; Hash password function consistently transform it's source to another one
 ;; Single hash source must derive variety hashes instead of 1
 ;; Only correct way to verify password is to use check

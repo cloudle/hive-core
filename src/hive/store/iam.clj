@@ -33,7 +33,7 @@
 
 (defn find-account-by-email [email]
   (d/q '[:find [(pull ?a [*])]
-         :in $ ?account
+         :in $ ?email
          :where [?a :user/email ?email]]
        (d/db conn)
        email))

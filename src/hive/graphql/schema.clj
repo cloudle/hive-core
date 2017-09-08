@@ -8,11 +8,15 @@
    :fields {:id datomic-id
             :name datomic-string
             :email datomic-string
-            :account datomic-string}})
+            :account datomic-string
+            :error {:type 'String}}})
 
 (defn resolve-account [context args v]
-  (let [user-email (get-in context [:user :email])]
-    (-> (iam/find-account-by-email user-email) first)))
+  (let [user (:user context)]
+    (cond
+      (contains? user :error) {:error (:error user)}
+      (contains? user :email) (-> (iam/find-account-by-email (:email user)) first)
+      :else {})))
 
 (def hive-schema
   (schema/compile

@@ -35,15 +35,20 @@
 ;  [request]
 ;  (ring-resp/response (execute hive-schema "query { greeting }" nil nil)))
 
+(defn decode-user [token]
+  (case token
+    nil {}
+    (try @(users/verify-token firebase-core token)
+         (catch Exception e {:error (.getMessage e)}))))
+
 (defn api-page
   [request]
   (let [{query   :parsed-query
          vars    :graphql-vars
-         graphql-context :graphql-context} request
-        token (:token graphql-context)
-        user @(users/verify-token firebase-core token)
-        context (assoc graphql-context :user user)]
-    (ring-resp/response (execute-parsed-query query vars context))))
+         context :graphql-context} request
+        user (decode-user (:token context))
+        final-context (assoc context :user user)]
+    (ring-resp/response (execute-parsed-query query vars final-context))))
 
 (def hive-query-parser-interceptor (interceptors/graphql-query-parser hive-schema))
 (def inject-hive-context-interceptor (interceptors/inject-graphql-context {:user-id "fake"}))
