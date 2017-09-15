@@ -20,17 +20,17 @@
 ;; Hash password function consistently transform it's source to another one
 ;; Single hash source must derive variety hashes instead of 1
 ;; Only correct way to verify password is to use check
-(expect true
-        (let [hashed-password (hash-password "12345")]
-          (and (not= (hash-password "12345") "12345")
-               (not= (hash-password "12345") (hash-password "12345"))
-               (= true (check-password "12345" hashed-password)))))
+;(expect true
+;        (let [hashed-password (hash-password "12345")]
+;          (and (not= (hash-password "12345") "12345")
+;               (not= (hash-password "12345") (hash-password "12345"))
+;               (= true (check-password "12345" hashed-password)))))
 
 ;; Login using account and password
-(expect "Cloud Le"
-        (with-redefs [conn (create-empty-in-memory-db)]
-          (do (add-account "cloudle" "12345" "Cloud Le" "lehaoson@gmail.com")
-              (-> (iam-login "cloudle" "12345") first :user/name))))
+;(expect "Cloud Le"
+;        (with-redefs [conn (create-empty-in-memory-db)]
+;          (do (add-account "cloudle" "12345" "Cloud Le" "lehaoson@gmail.com")
+;              (-> (iam-login "cloudle" "12345") first :user/name))))
 
 ; Delete account just toggle it's :user/disabled to true
 (expect true

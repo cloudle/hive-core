@@ -13,20 +13,20 @@
               (-> (find-project "Project name") first :project/name))))
 
 ;; Adding Project using account and find it using that account
-(expect #{["Gundam"]}
+(expect '("Gundam")
         (with-redefs [conn (create-empty-in-memory-db)]
           (do (add-account "cloudle" "12345" "Cloud Le" "lehaoson@gmail.com")
               (add-project-using-account "Gundam" "cloudle")
-              (find-projects-for-account "cloudle"))))
+              (map #(:project/name %) (find-projects-using-account "cloudle")))))
 
 ;; Add multiple project and find them using account
-(expect #{["Gundam"] ["Code Geass"] ["Hunter x Hunter"]}
+(expect '("Gundam" "Code Geass" "Hunter x Hunter")
         (with-redefs [conn (create-empty-in-memory-db)]
           (do (add-account "cloudle" "12345" "Cloud Le" "lehaoson@gmail.com")
               (add-project-using-account "Gundam" "cloudle")
               (add-project-using-account "Code Geass" "cloudle")
               (add-project-using-account "Hunter x Hunter" "cloudle")
-              (find-projects-for-account "cloudle"))))
+              (map #(:project/name %) (find-projects-using-account "cloudle")))))
 
 ; Delete project just toggle it's :project/disabled to true
 (expect true
