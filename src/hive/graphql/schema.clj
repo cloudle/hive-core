@@ -1,42 +1,24 @@
 (ns hive.graphql.schema
   (:require [com.walmartlabs.lacinia.schema :as schema]
             [hive.graphql.primitives :refer :all]
-            [hive.store.iam :as iam]))
-
-(def user-type
-  {:description "User account, could be internal user or an end-user with account"
-   :fields {:id datomic-id
-            :name datomic-string
-            :email datomic-string
-            :account datomic-string
-            :error {:type 'String}}})
-
-(defn resolve-account [context args v]
-  (let [user (:user context)]
-    (cond
-      (contains? user :error) {:error (:error user)}
-      (contains? user :email) (-> (iam/find-account-by-email (:email user)) first)
-      :else {})))
+            [hive.store.iam :as iam]
+            [hive.graphql.types :as types]
+            [hive.graphql.enums :as enums]
+            [hive.graphql.queries.user :as user-queries]
+            [hive.graphql.mutations.user :as user-mutations]
+            [hive.graphql.subscriptions.user :as user-subscriptions]))
 
 (def hive-schema
   (schema/compile
     {:objects
-     {:user user-type}
+     {:user types/user}
      :enums
-     {:userType {:description "User Type on the system"
-                 :values [:ADMIN :USER]}}
+     {:userType enums/user-type}
      :queries
-     {:account {:type :user
-                :args {:account {:type 'String :default-value "cloudle"}}
-                :resolve resolve-account}
-      :greeting {:type 'String
-                 :args {:userType {:type :userType}}
-                 :resolve (constantly "world!")}
-      :counter {:type 'String
-                :resolve (constantly "1")}}
+     {:account user-queries/account
+      :greeting user-queries/greeting
+      :counter user-queries/counter}
      :mutations
-     {:increaseCounter {:type 'String
-                        :resolve (fn [context args v] "2")}}
+     {:increaseCounter user-mutations/increase-counter}
      :subscriptions
-     {:logs {:type 'String
-             :stream (constantly "world!")}}}))
+     {:logs user-subscriptions/logs}}))
