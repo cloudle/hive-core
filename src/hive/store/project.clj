@@ -5,7 +5,9 @@
 
 (defn all-projects []
   (d/q '[:find [(pull ?u [*]) ...]
-         :where [?u :project/name]]
+         :where
+         [?u :project/name]
+         [?u :project/disabled false]]
        (d/db conn)))
 
 (defn add-project-using-account [project-name account]
@@ -22,7 +24,8 @@
          :in $ ?account
          :where
          [?user-id :user/account ?account]
-         [?user-id :user/projects ?project-id]]
+         [?user-id :user/projects ?project-id]
+         [?project-id :project/disabled false]]
        (d/db conn)
        user-account))
 

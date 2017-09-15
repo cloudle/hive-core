@@ -8,7 +8,7 @@
 
 (defn resolve-all-projects [context args v]
   (let [user (:user context)]
-    (project/all-projects)))
+    (project/find-projects-using-account (:email user))))
 
 (def project
   {:type :project
