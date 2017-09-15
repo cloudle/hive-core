@@ -9,6 +9,14 @@
       (contains? user :email) (-> (iam/find-account-by-email (:email user)) first)
       :else {})))
 
+(defn resolve-all-accounts [context args v]
+  (let [user (:user context)]
+    (iam/all-accounts)))
+
+(def all-accounts
+  {:type '(list :user)
+   :resolve resolve-all-accounts})
+
 (def account
   {:type :user
    :args {:account {:type 'String :default-value "cloudle"}}

@@ -8,3 +8,9 @@
             :email datomic-string
             :account datomic-string
             :error {:type 'String}}})
+
+(def project
+  {:description "Project, which containing it's own schema Types, data instances, configs, billings.."
+   :fields {:id datomic-id
+            :name datomic-string
+            :disabled datomic-boolean}})

@@ -15,3 +15,4 @@
 
 (def datomic-id {:type 'String :resolve resolve-datomic-id})
 (def datomic-string {:type 'String :resolve resolve-datomic-field})
+(def datomic-boolean {:type 'Boolean :resolve resolve-datomic-field})
