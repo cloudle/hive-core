@@ -3,6 +3,11 @@
             [hive.core :refer [conn]]
             [hive.store.iam :refer :all]))
 
+(defn all-projects []
+  (d/q '[:find [(pull ?u [*]) ...]
+         :where [?u :project/name]]
+       (d/db conn)))
+
 (defn add-project-using-account [project-name account]
   (let [project-id (d/tempid :db.part/user)]
     @(d/transact
@@ -12,13 +17,12 @@
              {:db/id (find-account-id account)
               :user/projects project-id}])))
 
-(defn find-projects-for-account [user-account]
-  (d/q '[:find ?project-name
-         :in $ ?user-account
+(defn find-projects-using-account [user-account]
+  (d/q '[:find [(pull ?project-id [*]) ...]
+         :in $ ?account
          :where
          [?user-id :user/account ?account]
-         [?user-id :user/projects ?project-id]
-         [?project-id :project/name ?project-name]]
+         [?user-id :user/projects ?project-id]]
        (d/db conn)
        user-account))
 

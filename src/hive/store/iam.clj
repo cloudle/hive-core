@@ -6,14 +6,19 @@
 ;; Helper functions ---------------------------
 (defn uuid [] (str (java.util.UUID/randomUUID)))
 
-;(defn hash-password [password]
-;  (hashers/derive password {:alg :scrypt}))
+(defn hash-password [password]
+  (hashers/derive password {:alg :scrypt}))
 
-;(defn check-password [password hash]
-;  (hashers/check password hash))
+(defn check-password [password hash]
+  (hashers/check password hash))
 
-(defn hash-password [password] (uuid))
-(defn check-password [password hash] true)
+;(defn hash-password [password] (uuid))
+;(defn check-password [password hash] true)
+
+(defn all-accounts []
+  (d/q '[:find [(pull ?u [*]) ...]
+         :where [?u :user/account]]
+       (d/db conn)))
 
 (defn add-account [account password name email]
   @(d/transact
