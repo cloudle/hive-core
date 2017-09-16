@@ -14,3 +14,9 @@
    :fields {:id datomic-id
             :name datomic-string
             :disabled datomic-boolean}})
+
+(def schema-type
+  {:description "Schema type (GraphQL), which dynamically generated using admin UI editor"
+   :fields {:id datomic-id
+            :name datomic-string
+            :disabled datomic-boolean}})

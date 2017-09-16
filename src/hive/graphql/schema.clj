@@ -6,6 +6,7 @@
             [hive.graphql.enums :as enums]
             [hive.graphql.queries.user :as user-queries]
             [hive.graphql.queries.project :as project-query]
+            [hive.graphql.queries.schema-type :as schema-type-query]
             [hive.graphql.mutations.user :as user-mutations]
             [hive.graphql.subscriptions.user :as user-subscriptions]))
 
@@ -13,16 +14,18 @@
   (schema/compile
     {:objects
      {:user types/user
-      :project types/project}
+      :project types/project
+      :schemaType types/schema-type}
      :enums
      {:userType enums/user-type}
      :queries
      {:account user-queries/account
-      :allAccounts user-queries/all-accounts
+      :accounts user-queries/all-accounts
       :greeting user-queries/greeting
       :counter user-queries/counter
       :project project-query/project
-      :allProjects project-query/all-projects}
+      :projects project-query/all-projects
+      :schemaTypes schema-type-query/all-schema-types}
      :mutations
      {:increaseCounter user-mutations/increase-counter}
      :subscriptions
